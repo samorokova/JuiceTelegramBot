@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JuiceTelegramBot.Core.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Telegram.Bot;
 
 namespace JuiceTelegramBot
 {
@@ -26,6 +28,9 @@ namespace JuiceTelegramBot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSingleton<IJuiceRepository, InFileJuiceRepository>();
+            services.AddSingleton<IOrderRepository, InFileOrderRepository>();
+            services.AddScoped<ITelegramBotClient, TelegramBotClient>(srvs => new TelegramBotClient("695500475:AAE2Yur7FVFxm0bjQsz6yZZg5rNNUwzi_m4"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,13 +40,9 @@ namespace JuiceTelegramBot
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseHsts();
-            }
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
+
     }
 }

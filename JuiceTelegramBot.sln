@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuiceTelegramBot", "JuiceTelegramBot\JuiceTelegramBot.csproj", "{666E8005-52B6-43E8-89A5-7DBB1374016E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuiceTelegramBot.Core", "JuiceTelegramBot.Core\JuiceTelegramBot.Core.csproj", "{D47DFB5B-D812-4DDB-AED8-CEE40571D4DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{666E8005-52B6-43E8-89A5-7DBB1374016E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{666E8005-52B6-43E8-89A5-7DBB1374016E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{666E8005-52B6-43E8-89A5-7DBB1374016E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D47DFB5B-D812-4DDB-AED8-CEE40571D4DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D47DFB5B-D812-4DDB-AED8-CEE40571D4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D47DFB5B-D812-4DDB-AED8-CEE40571D4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D47DFB5B-D812-4DDB-AED8-CEE40571D4DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
