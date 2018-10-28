@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JuiceTelegramBot.Core.Model;
 using JuiceTelegramBot.Core.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,10 +29,13 @@ namespace JuiceTelegramBot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration.GetValue<string>("ConnectionString");
+            services.AddDbContext<ApiContext>(options => options.UseSqlServer(connectionString));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddSingleton<IJuiceRepository, InFileJuiceRepository>();
-            services.AddSingleton<IOrderRepository, InFileOrderRepository>();
-            services.AddScoped<ITelegramBotClient, TelegramBotClient>(srvs => new TelegramBotClient("695500475:AAE2Yur7FVFxm0bjQsz6yZZg5rNNUwzi_m4"));
+            services.AddScoped<IJuiceRepository, InDbJuiceRepository>();
+            services.AddScoped<IOrderRepository, InDbOrderRepository>();
+            services.AddScoped<ITelegramBotClient, TelegramBotClient>(srvs => new TelegramBotClient("token"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -17,7 +17,7 @@ namespace JuiceTelegramBot.Controllers
         private readonly IJuiceRepository juiceRepository;
         private readonly IOrderRepository orderRepository;
         private readonly ITelegramBotClient telegramBot;
-        private const int adminId = 11111111;
+        private const int adminId = adminId;
 
         public TelegramBotController(IJuiceRepository juiceRepository, IOrderRepository orderRepository, ITelegramBotClient botClient)
         {
