@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JuiceTelegramBot.Core.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -17,14 +18,16 @@ namespace JuiceTelegramBot.Controllers
         private readonly IJuiceRepository juiceRepository;
         private readonly IOrderRepository orderRepository;
         private readonly ITelegramBotClient telegramBot;
-        private const int adminId = adminId;
 
-        public TelegramBotController(IJuiceRepository juiceRepository, IOrderRepository orderRepository, ITelegramBotClient botClient)
+        private  IConfiguration Configuration { get; }
+
+        public TelegramBotController(IJuiceRepository juiceRepository, IOrderRepository orderRepository, ITelegramBotClient botClient, IConfiguration configuration)
         {
+
             this.juiceRepository = juiceRepository ?? throw new ArgumentNullException(nameof(juiceRepository));
             this.orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
             this.telegramBot = botClient;
-
+            Configuration = configuration;
         }
         // POST api/values
         [HttpPost]
@@ -41,13 +44,13 @@ namespace JuiceTelegramBot.Controllers
                         case "/hi":
                         case "hi":
                             await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Hi, " + update.Message.Chat.FirstName + "! Choice the juice you want: \n We have:\n" + string.Join("\n", juiceRepository.GetJuiceList().Select(juice => "/" + juice)));
-                            if (update.Message.Chat.Id == adminId)
+                            if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
                             {
                                 await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "For manage the Order List, please choice the command: \n /vieworders to show the Order List \n /killthemall to clear the Order List");
                             }
                             break;
                         case "/vieworders":
-                            if (update.Message.Chat.Id == adminId)
+                            if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
                             {
                                 await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Ordered Juice: \n" + string.Join("\n", orderRepository.GetOrderList().Select(item => item.Name + " " + item.OrderDateTime.ToShortDateString())));
                             }
@@ -58,7 +61,7 @@ namespace JuiceTelegramBot.Controllers
 
                             break;
                         case "/killthemall":
-                            if (update.Message.Chat.Id == adminId)
+                            if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
                             {
                                 orderRepository.ClearList();
                                 await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "All orders are cleared!");

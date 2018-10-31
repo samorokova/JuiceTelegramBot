@@ -29,13 +29,15 @@ namespace JuiceTelegramBot
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetValue<string>("ConnectionString");
+            var connectionString = Configuration.GetValue<string>("JuiceTelegramBotConnectionString");
             services.AddDbContext<ApiContext>(options => options.UseSqlServer(connectionString));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddScoped<IJuiceRepository, InDbJuiceRepository>();
             services.AddScoped<IOrderRepository, InDbOrderRepository>();
-            services.AddScoped<ITelegramBotClient, TelegramBotClient>(srvs => new TelegramBotClient("token"));
+
+            var token = Configuration.GetValue<string>("JuiceTelegramBotToken");
+            services.AddScoped<ITelegramBotClient, TelegramBotClient>(srvs => new TelegramBotClient(token));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
