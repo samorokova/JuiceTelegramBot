@@ -17,8 +17,8 @@ namespace JuiceTelegramBot.Core.Repository
 
         public void AddOrder(string name, DateTime orderDate)
         {
-            var order = new Order();
-            order.Name = name;
+            var order = new OrderDb();
+            order.Juice = _context.Juices.Single(j => j.Name == name);
             order.OrderDateTime = orderDate;
             _context.Orders.Add(order);
             _context.SaveChanges();
@@ -31,9 +31,17 @@ namespace JuiceTelegramBot.Core.Repository
             _context.SaveChanges();
         }
 
-        public IList<Order> GetOrderList()
+        public IList<DomainObject.Order> GetOrderList()
         {
-            return _context.Orders.ToList();
+            return _context.Orders.Select(o => new DomainObject.Order
+            {
+                Juice = new DomainObject.Juice
+                {
+                    Name = o.Juice.Name,
+                    IsCustom = o.Juice.IsCustom
+                },
+                OrderDateTime = o.OrderDateTime
+            }).ToList();
         }
     }
 }

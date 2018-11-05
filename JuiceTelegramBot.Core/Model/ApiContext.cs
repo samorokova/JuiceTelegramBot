@@ -13,7 +13,7 @@ namespace JuiceTelegramBot.Core.Model
             this.Database.EnsureCreated();
         }
 
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Juice> Juices { get; set; }
+        public DbSet<OrderDb> Orders { get; set; }
+        public DbSet<JuiceDb> Juices { get; set; }
     }
 }

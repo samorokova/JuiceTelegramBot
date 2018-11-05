@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using JuiceTelegramBot.Core.DomainObject;
 using JuiceTelegramBot.Core.Model;
 
 namespace JuiceTelegramBot.Core.Repository
 {
     public class InFileOrderRepository : IOrderRepository
     {
-        private IList<Order> orderList = new List<Order>();
+        private IList<OrderFile> orderList = new List<OrderFile>();
         public const string Path = @"Orders.txt";
         private readonly string[] lines = null;
         public InFileOrderRepository()
@@ -20,14 +22,14 @@ namespace JuiceTelegramBot.Core.Repository
 
             foreach (var item in lines)
             {
-                var order = Order.DeSerialize(item);
+                var order = OrderFile.DeSerialize(item);
                 orderList.Add(order);
             }
         }
 
         public void AddOrder(string name, DateTime orderDate)
         {
-            orderList.Add(new Order()
+            orderList.Add(new OrderFile()
             {
                 Name = name,
                 OrderDateTime = orderDate
@@ -58,7 +60,15 @@ namespace JuiceTelegramBot.Core.Repository
 
         public IList<Order> GetOrderList()
         {
-            return this.orderList;
+            return orderList.Select(e => new Order
+            {
+                OrderDateTime = e.OrderDateTime,
+                Juice = new Juice
+                {
+                    Name = e.Name,
+                    IsCustom = false
+                }
+            }).ToList();
         }
 
         private static Object syncroot = new object();

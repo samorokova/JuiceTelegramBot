@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using JuiceTelegramBot.Core.DomainObject;
 
 namespace JuiceTelegramBot.Core.Repository
 {
@@ -16,28 +17,37 @@ namespace JuiceTelegramBot.Core.Repository
             _context = context;  
 
         }
-        public void AddJuice(string name)
+        public void AddJuice(Juice juice)
         {
-            var juice = new Juice();
-            juice.Name = name;
-            _context.Juices.Add(juice);
+            var juiceDb = new JuiceDb();
+            juiceDb.Name = juice.Name;
+            juiceDb.IsCustom = juice.IsCustom;
+            _context.Juices.Add(juiceDb);
             _context.SaveChanges();
         }
 
-        public void DeleteJuice(string name)
+        public void DeleteJuice(Juice juice)
         {
-            var juice = _context.Juices.FirstOrDefault(e => e.Name == name);
+            var juiceDb = _context.Juices.FirstOrDefault(e => e.Name == juice.Name);
             if (juice == null)
             {
                 throw new Exception("Juice not found");
             }
-            _context.Juices.Remove(juice);
+            _context.Juices.Remove(juiceDb);
             _context.SaveChanges();
         }
 
-        public IList<string> GetJuiceList()
+        public IList<Juice> GetJuiceList()
         {
-            return _context.Juices.Select(e => e.Name).ToList();
+
+
+            return _context.Juices.Select(j => new DomainObject.Juice
+            {
+
+                Name = j.Name,
+                IsCustom = j.IsCustom
+            }
+                ).ToList();
         }
     }
 }

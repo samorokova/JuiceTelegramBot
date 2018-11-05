@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace JuiceTelegramBot.Core.Repository
+namespace JuiceTelegramBot.Core.Services
 {
-    public interface IOrderRepository
+    public interface IOrderService
     {
         IList<Order> GetOrderList();
         void AddOrder(string name, DateTime dateTime);
         void ClearList();
+        bool IsInOrders(string answer);
     }
 }

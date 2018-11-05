@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JuiceTelegramBot.Core.DomainObject;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -7,23 +8,34 @@ namespace JuiceTelegramBot.Core.Repository
 {
     public class InFileJuiceRepository : IJuiceRepository
     {
-        private IList<string> juiceList = new List<string>();
+        private IList<Juice> juiceList = new List<Juice>();
 
         public InFileJuiceRepository()
         {
 
         }
-        public void AddJuice(string name)
+        public void AddJuice(Juice juice)
         {
-            throw new NotImplementedException("Can't add item to file.");
+            try
+            {
+                File.AppendAllText(@"Juice.txt", $"{juice.Name},{juice.IsCustom}");
+
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(e.Message);
+            }
+            
         }
 
-        public void DeleteJuice(string name)
+        public void DeleteJuice(Juice juice)
         {
             throw new NotImplementedException();
         }
 
-        public IList<string> GetJuiceList()
+        public IList<Juice> GetJuiceList()
         {
             try
             {
@@ -33,10 +45,14 @@ namespace JuiceTelegramBot.Core.Repository
                     StreamReader readFile = new StreamReader(file);
                     while (!readFile.EndOfStream)
                     {
-                        juiceList.Add(readFile.ReadLine());
-
+                        var line = readFile.ReadLine();
+                        var lines = line.Split(',');
+                        var juice = new Juice();
+                        juice.Name = lines[0];
+                        juice.IsCustom = Boolean.Parse(lines[1]);
                     }
                     readFile.Close();
+
                 }
             }
             catch (Exception e)

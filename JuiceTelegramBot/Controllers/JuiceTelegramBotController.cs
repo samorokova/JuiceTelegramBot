@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JuiceTelegramBot.Core.Repository;
+using JuiceTelegramBot.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,19 +16,19 @@ namespace JuiceTelegramBot.Controllers
     [ApiController]
     public class TelegramBotController : ControllerBase
     {
-        private readonly IJuiceRepository juiceRepository;
-        private readonly IOrderRepository orderRepository;
         private readonly ITelegramBotClient telegramBot;
+        private readonly IOrderService orderService;
+        private readonly IJuiceService juiceService;
 
-        private  IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
-        public TelegramBotController(IJuiceRepository juiceRepository, IOrderRepository orderRepository, ITelegramBotClient botClient, IConfiguration configuration)
+        public TelegramBotController(ITelegramBotClient botClient, IConfiguration configuration, IOrderService orderService, IJuiceService juiceService)
         {
 
-            this.juiceRepository = juiceRepository ?? throw new ArgumentNullException(nameof(juiceRepository));
-            this.orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
             this.telegramBot = botClient;
             Configuration = configuration;
+            this.orderService = orderService;
+            this.juiceService = juiceService;
         }
         // POST api/values
         [HttpPost]
@@ -43,7 +44,7 @@ namespace JuiceTelegramBot.Controllers
                         case "/start":
                         case "/hi":
                         case "hi":
-                            await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Hi, " + update.Message.Chat.FirstName + "! Choice the juice you want: \n We have:\n" + string.Join("\n", juiceRepository.GetJuiceList().Select(juice => "/" + juice)));
+                            await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Hi, " + update.Message.Chat.FirstName + "! Choice the juice you want: \n We have:\n" + string.Join("\n", juiceService.GetJuiceList().Select(juice => "/" + juice)));
                             if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
                             {
                                 await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "For manage the Order List, please choice the command: \n /vieworders to show the Order List \n /killthemall to clear the Order List");
@@ -52,7 +53,7 @@ namespace JuiceTelegramBot.Controllers
                         case "/vieworders":
                             if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
                             {
-                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Ordered Juice: \n" + string.Join("\n", orderRepository.GetOrderList().Select(item => item.Name + " " + item.OrderDateTime.ToShortDateString())));
+                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Ordered Juice: \n" + string.Join("\n", orderService.GetOrderList().Select(item => item.Juice.Name + " " + item.OrderDateTime.ToShortDateString())));
                             }
                             else
                             {
@@ -63,7 +64,7 @@ namespace JuiceTelegramBot.Controllers
                         case "/killthemall":
                             if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
                             {
-                                orderRepository.ClearList();
+                                orderService.ClearList();
                                 await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "All orders are cleared!");
                             }
                             else
@@ -73,15 +74,15 @@ namespace JuiceTelegramBot.Controllers
 
                             break;
                         default:
-                            if (IsInJuices(answer))
+                            if (juiceService.IsInJuices(answer))
                             {
-                                if (IsInOrders(answer))
+                                if (juiceService.IsInJuices(answer))
                                 {
                                     await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, answer + " is already ordered.");
                                 }
                                 else
                                 {
-                                    orderRepository.AddOrder(answer, DateTime.Now);
+                                    orderService.AddOrder(answer, DateTime.Now);
                                     await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Thank you for your order!");
                                 }
                             }
@@ -105,26 +106,6 @@ namespace JuiceTelegramBot.Controllers
 
             }
 
-        }
-        private bool IsInJuices(string answer)
-        {
-            IList<string> juices = juiceRepository.GetJuiceList();
-            for (int i = 0; i < juices.Count; i++)
-            {
-                if (answer == "/" + juices[i].ToLower())
-                {
-                    return true;
-                }
-
-            }
-            return false;
-        }
-
-        private bool IsInOrders(string answer)
-        {
-            var orders = orderRepository.GetOrderList();
-            var order = orders.FirstOrDefault(item => item.Name == answer);
-            return order != null;
         }
     }
 }

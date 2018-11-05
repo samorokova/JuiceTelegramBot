@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace JuiceTelegramBot.Core.Model
 {
-    public class Order
+    public class OrderFile
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
         public string Name { get; set; }
         public DateTime OrderDateTime { get; set; }
 
@@ -19,15 +14,14 @@ namespace JuiceTelegramBot.Core.Model
             return Name + "," + OrderDateTime.ToFileTimeUtc();
         }
 
-        public static Order DeSerialize(string s)
+        public static OrderFile DeSerialize(string s)
         {
             var parts = s.Split(new[] { ',' });
-            var o = new Order
-            {
-                Name = parts[0],
-                OrderDateTime = DateTime.FromFileTimeUtc(long.Parse(parts[1]))
-            };
+            var o = new OrderFile();
+            o.Name = parts[0];
+            o.OrderDateTime = DateTime.FromFileTimeUtc(long.Parse(parts[1]));
             return o;
         }
     }
+
 }
