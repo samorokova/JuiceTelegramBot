@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuiceTelegramBot", "JuiceTelegramBot\JuiceTelegramBot.csproj", "{666E8005-52B6-43E8-89A5-7DBB1374016E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JuiceTelegramBot", "JuiceTelegramBot\JuiceTelegramBot.csproj", "{666E8005-52B6-43E8-89A5-7DBB1374016E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuiceTelegramBot.Core", "JuiceTelegramBot.Core\JuiceTelegramBot.Core.csproj", "{D47DFB5B-D812-4DDB-AED8-CEE40571D4DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JuiceTelegramBot.Core", "JuiceTelegramBot.Core\JuiceTelegramBot.Core.csproj", "{D47DFB5B-D812-4DDB-AED8-CEE40571D4DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuiceTelegramBotTests", "JuiceTelegramBotTests\JuiceTelegramBotTests.csproj", "{40ED2319-56E0-45CF-B40D-3242FCA8873B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D47DFB5B-D812-4DDB-AED8-CEE40571D4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D47DFB5B-D812-4DDB-AED8-CEE40571D4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D47DFB5B-D812-4DDB-AED8-CEE40571D4DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40ED2319-56E0-45CF-B40D-3242FCA8873B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40ED2319-56E0-45CF-B40D-3242FCA8873B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40ED2319-56E0-45CF-B40D-3242FCA8873B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40ED2319-56E0-45CF-B40D-3242FCA8873B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

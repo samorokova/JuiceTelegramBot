@@ -14,11 +14,11 @@ namespace JuiceTelegramBot.Core.Repository
         {
 
         }
-        public void AddJuice(Juice juice)
+        public void AddJuice(string answer, bool isCustom, bool approved, DateTime juiceDateTime, string username)
         {
             try
             {
-                File.AppendAllText(@"Juice.txt", $"{juice.Name},{juice.IsCustom}");
+                File.AppendAllText(@"Juice.txt", $"{answer},{isCustom}, {approved}, {juiceDateTime}, {username}");
 
             }
             catch (Exception e)
@@ -50,6 +50,9 @@ namespace JuiceTelegramBot.Core.Repository
                         var juice = new Juice();
                         juice.Name = lines[0];
                         juice.IsCustom = Boolean.Parse(lines[1]);
+                        juice.Approved = Boolean.Parse(lines[2]);
+                        juice.JuiceDateTime = DateTime.Parse(lines[3]);
+                        juice.UserName = lines[4];
                     }
                     readFile.Close();
 

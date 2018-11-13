@@ -14,9 +14,9 @@ namespace JuiceTelegramBot.Core.Services
         {
             this.juiceRepository = juiceRepository ?? throw new ArgumentNullException(nameof(juiceRepository));
         }
-        public void AddJuice(Juice juice)
+        public void AddJuice(string answer, bool isCustom, bool approved, DateTime juiceDateTime, string username)
         {
-            juiceRepository.AddJuice(juice);
+            juiceRepository.AddJuice(answer, isCustom, approved, juiceDateTime, username);
         }
 
         public void DeleteJuice(Juice juice)

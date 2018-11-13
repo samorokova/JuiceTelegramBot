@@ -17,11 +17,14 @@ namespace JuiceTelegramBot.Core.Repository
             _context = context;  
 
         }
-        public void AddJuice(Juice juice)
+        public void AddJuice(string answer, bool isCustom, bool approved, DateTime juiceDateTime, string username)
         {
             var juiceDb = new JuiceDb();
-            juiceDb.Name = juice.Name;
-            juiceDb.IsCustom = juice.IsCustom;
+            juiceDb.Name = answer;
+            juiceDb.IsCustom = isCustom;
+            juiceDb.Approved = approved;
+            juiceDb.JuiceDateTime = juiceDateTime;
+            juiceDb.UserName = username;
             _context.Juices.Add(juiceDb);
             _context.SaveChanges();
         }
@@ -41,11 +44,16 @@ namespace JuiceTelegramBot.Core.Repository
         {
 
 
-            return _context.Juices.Select(j => new DomainObject.Juice
+            return _context.Juices.Select(j => new Juice
             {
 
                 Name = j.Name,
-                IsCustom = j.IsCustom
+                IsCustom = j.IsCustom,
+                Approved = j.Approved,
+                JuiceDateTime = j.JuiceDateTime,
+                UserName = j.UserName,
+
+
             }
                 ).ToList();
         }

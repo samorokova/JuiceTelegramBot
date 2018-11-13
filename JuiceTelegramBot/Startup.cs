@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JuiceTelegramBot.Core.Model;
 using JuiceTelegramBot.Core.Repository;
+using JuiceTelegramBot.Core.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,6 +36,9 @@ namespace JuiceTelegramBot
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddScoped<IJuiceRepository, InDbJuiceRepository>();
             services.AddScoped<IOrderRepository, InDbOrderRepository>();
+
+            services.AddScoped<IJuiceService, JuiceService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             var token = Configuration.GetValue<string>("JuiceTelegramBotToken");
             services.AddScoped<ITelegramBotClient, TelegramBotClient>(srvs => new TelegramBotClient(token));
