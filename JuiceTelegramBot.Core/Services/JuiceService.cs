@@ -32,13 +32,27 @@ namespace JuiceTelegramBot.Core.Services
         public bool IsInJuices(string answer)
         {
             IList<Juice> juices = juiceRepository.GetJuiceList();
-            for (int i = 0; i < juices.Count; i++)
+            if (answer[0] == '/')
             {
-                if (answer == "/" + juices[i].Name.ToLower())
+                for (int i = 0; i < juices.Count; i++)
                 {
-                    return true;
-                }
+                    if (answer == "/" + juices[i].Name.ToLower())
+                    {
+                        return true;
+                    }
 
+                }
+            }
+            else
+            {
+                for (int i = 0; i < juices.Count; i++)
+                {
+                    if (answer == juices[i].Name.ToLower())
+                    {
+                        return true;
+                    }
+
+                }
             }
             return false;
         }

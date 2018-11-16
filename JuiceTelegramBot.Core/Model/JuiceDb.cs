@@ -17,5 +17,7 @@ namespace JuiceTelegramBot.Core.Model
         public DateTime JuiceDateTime { get; set; }
         public string UserName { get; set; }
 
+        public ICollection<OrderDb> Orders { get; set; }
+
     }
 }

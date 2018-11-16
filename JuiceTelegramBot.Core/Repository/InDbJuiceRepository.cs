@@ -32,10 +32,11 @@ namespace JuiceTelegramBot.Core.Repository
         public void DeleteJuice(Juice juice)
         {
             var juiceDb = _context.Juices.FirstOrDefault(e => e.Name == juice.Name);
-            if (juice == null)
+            if (juiceDb == null)
             {
                 throw new Exception("Juice not found");
             }
+            
             _context.Juices.Remove(juiceDb);
             _context.SaveChanges();
         }

@@ -39,14 +39,15 @@ namespace JuiceTelegramBot.Controllers
                 if (update.Message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
                 {
                     string answer = update.Message.Text.ToLower();
+                    int v = Configuration.GetValue<int>("JuiceTelegramBotAdminId"); //ToDo: rename
                     switch (answer)
                     {
                         case "/start":
                         case "/hi":
                         case "hi":
                             await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Hi, " + update.Message.Chat.FirstName + "! Choice the beverage you want: \n We have:\n" + string.Join("\n", juiceService.GetJuiceList().Select(juice => "/" + juice)));
-                            await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "If you don't see the beverage you want, you can add it by yourself. \n For adding a new beverage, please, click /addnewbeverage");
-                            if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
+                            await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "If you don't see the beverage you want, you can add it by yourself. \n For adding a new beverage just imput the name");
+                            if (update.Message.Chat.Id == v)
                             {
                                 await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "For manage the order list, please, choose the command: " +
                                     "\n /viewebeverageslist to show beverages list" +
@@ -58,22 +59,10 @@ namespace JuiceTelegramBot.Controllers
                             }
                             break;
 
-                        case "/addnewbeverage":
-                            if (juiceService.IsInJuices(answer))
-                            {
-                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, answer + " is already exist. To see existing beverage, please, clic /viewebeverageslist");
-                            }
-                            else
-                            {
-                                juiceService.AddJuice(answer, true, false, DateTime.Now, update.Message.Chat.FirstName);
-                                orderService.AddOrder(answer, DateTime.Now);
-                            }
-                            break;
-
                         case "/viewebeverageslist":
-                            if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
+                            if (update.Message.Chat.Id == v)
                             {
-                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, string.Join("\n", juiceService.GetJuiceList().Select(item => item.Name + " " + item.IsCustom+" " +item.Approved+ " " + item.JuiceDateTime.ToShortDateString() + " " +item.UserName)));
+                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, string.Join("\n", juiceService.GetJuiceList().Select(item => string.Format("Beverage name: {0}, Is custom {1}, Approved:{2}, Date:{3}, User name:{4}", item.Name, item.IsCustom, item.Approved, item.JuiceDateTime.ToShortDateString(), item.UserName))));
                             }
                             else
                             {
@@ -82,9 +71,9 @@ namespace JuiceTelegramBot.Controllers
                             break;
 
                         case "/viewcustombeverage":
-                            if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
+                            if (update.Message.Chat.Id == v)
                             {
-                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Custom beverages: \n" + juiceService.GetJuiceList().Where(j => j.IsCustom == true));
+                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Custom beverages: \n" + string.Join("\n", juiceService.GetJuiceList().Where(j => j.IsCustom == true).Select(item => item.Name)));
                             }
                             else
                             {
@@ -93,9 +82,9 @@ namespace JuiceTelegramBot.Controllers
                             break;
 
                         case "/viewnotapproved":
-                            if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
+                            if (update.Message.Chat.Id == v)
                             {
-                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Custom beverages: \n" + juiceService.GetJuiceList().Where(j => j.Approved == false));
+                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Not approved beverages: \n" + string.Join("\n", juiceService.GetJuiceList().Where(j => j.Approved == false).Select(item => item.Name + $" Approve: /approve_{item.Name}, Delete: /delete_{item.Name}")));
                             }
                             else
                             {
@@ -104,9 +93,9 @@ namespace JuiceTelegramBot.Controllers
                             break;
 
                         case "/vieworders":
-                            if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
+                            if (update.Message.Chat.Id == v)
                             {
-                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Ordered Juice: \n" + string.Join("\n", orderService.GetOrderList().Select(item => item.Juice.Name + " " + item.OrderDateTime.ToShortDateString())));
+                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Ordered beverages: \n" + string.Join("\n", orderService.GetOrderList().Select(item => item.Juice.Name + " " + item.OrderDateTime.ToShortDateString())));
                             }
                             else
                             {
@@ -115,7 +104,7 @@ namespace JuiceTelegramBot.Controllers
                             break;
 
                         case "/killthemall":
-                            if (update.Message.Chat.Id == Configuration.GetValue<int>("JuiceTelegramBotAdminId"))
+                            if (update.Message.Chat.Id == v)
                             {
                                 orderService.ClearList();
                                 await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "All orders are cleared!");
@@ -142,7 +131,9 @@ namespace JuiceTelegramBot.Controllers
                             }
                             else
                             {
-                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Sorry, can't help with this. Try to say /Hi");
+                                juiceService.AddJuice(answer, true, false, DateTime.Now, update.Message.Chat.FirstName);
+                                orderService.AddOrder(answer, DateTime.Now);
+                                await telegramBot.SendTextMessageAsync(update.Message.Chat.Id, "Thank you for your order!");
                             }
                             break;
                     }

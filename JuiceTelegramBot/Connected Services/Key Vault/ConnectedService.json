@@ -1,0 +1,10 @@
+﻿{
+  "ProviderId": "Microsoft.Azure.KeyVault",
+  "Version": "15.8.0.0",
+  "GettingStartedDocument": {
+    "Uri": "https://go.microsoft.com/fwlink/?linkid=869667"
+  },
+
+  "JuiceTelegramBotAdminId": "403382901",
+  "JuiceTelegramBotToken": "695500475:AAE2Yur7FVFxm0bjQsz6yZZg5rNNUwzi_m4"
+}
