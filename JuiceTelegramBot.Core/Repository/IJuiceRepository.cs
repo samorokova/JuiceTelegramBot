@@ -10,5 +10,6 @@ namespace JuiceTelegramBot.Core.Repository
         IList<Juice> GetJuiceList();
         void AddJuice(string answer, bool isCustom, bool approved, DateTime juiceDateTime, string username);
         void DeleteJuice(Juice juice);
+        void DeleteJuice(string name);
     }
 }

@@ -35,6 +35,11 @@ namespace JuiceTelegramBot.Core.Repository
             throw new NotImplementedException();
         }
 
+        public void DeleteJuice(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public IList<Juice> GetJuiceList()
         {
             try

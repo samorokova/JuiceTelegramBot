@@ -31,10 +31,22 @@ namespace JuiceTelegramBot.Core.Repository
 
         public void DeleteJuice(Juice juice)
         {
-            var juiceDb = _context.Juices.FirstOrDefault(e => e.Name == juice.Name);
+            this.DeleteJuice(juice.Name);
+        }
+
+        public void DeleteJuice (string name)
+        {
+            var juiceDb = _context.Juices.FirstOrDefault(e => e.Name == name);
             if (juiceDb == null)
             {
                 throw new Exception("Juice not found");
+            }
+            if (_context.Orders.Any(o=>o.Juice.Id==juiceDb.Id)) 
+            {
+                foreach (var order in _context.Orders.Where(o=>o.Juice.Id==juiceDb.Id))
+                {
+                    juiceDb.Orders.Remove(order);
+                }
             }
             
             _context.Juices.Remove(juiceDb);

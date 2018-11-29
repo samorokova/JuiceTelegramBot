@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JuiceTelegramBot.Core.Model;
+using JuiceTelegramBot.Core.Repository;
+using JuiceTelegramBot.Core.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace JuiceTelegramBotWebApp
 {
@@ -33,15 +36,24 @@ namespace JuiceTelegramBotWebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //var connectionString = Configuration.GetValue<string>("JuiceTelegramBotConnectionString");
-            //services.AddDbContext<ApiContext>(options => options.UseSqlServer(connectionString));
+            var connectionString = Configuration.GetValue<string>("JuiceTelegramBotConnectionString");
+            services.AddDbContext<ApiContext>(options => options.UseSqlServer(connectionString));
+
+            services.AddScoped<IJuiceService, JuiceService>();
+            services.AddScoped<IJuiceRepository, InDbJuiceRepository>();
+            services.AddScoped<IOrderRepository, InDbOrderRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddLogging();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddConsole();
+            loggerFactory.AddDebug();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

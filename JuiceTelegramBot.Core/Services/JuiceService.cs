@@ -36,7 +36,7 @@ namespace JuiceTelegramBot.Core.Services
             {
                 for (int i = 0; i < juices.Count; i++)
                 {
-                    if (answer == "/" + juices[i].Name.ToLower())
+                    if (answer.ToLower() == "/" + juices[i].Name.ToLower())
                     {
                         return true;
                     }
@@ -47,7 +47,7 @@ namespace JuiceTelegramBot.Core.Services
             {
                 for (int i = 0; i < juices.Count; i++)
                 {
-                    if (answer == juices[i].Name.ToLower())
+                    if (answer.ToLower() == juices[i].Name.ToLower())
                     {
                         return true;
                     }
@@ -55,6 +55,11 @@ namespace JuiceTelegramBot.Core.Services
                 }
             }
             return false;
+        }
+
+        public void DeleteById(string name)
+        {
+            juiceRepository.DeleteJuice(name);
         }
     }
 }

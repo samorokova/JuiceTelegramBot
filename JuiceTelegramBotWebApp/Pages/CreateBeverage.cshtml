@@ -1,0 +1,13 @@
+﻿@page
+@model JuiceTelegramBotWebApp.Pages.CreateModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create new beverage</h2>
+<form method="POST">
+    <div asp-validation-summary="All"></div>
+    <div>Enter beverage name:<input asp-for="Juice.Name" />@Model.Message</div>
+    <input type="submit" />
+</form>
+
