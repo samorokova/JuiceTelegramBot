@@ -70,5 +70,35 @@ namespace JuiceTelegramBot.Core.Repository
             }
             return juiceList;
         }
+
+        void IJuiceRepository.AddJuice(string answer, bool isCustom, bool approved, DateTime juiceDateTime, string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuiceRepository.ApproveJuice(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuiceRepository.DeleteJuice(Juice juice)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IJuiceRepository.DeleteJuice(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        Juice IJuiceRepository.GetJuiceByName(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        IList<Juice> IJuiceRepository.GetJuiceList()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

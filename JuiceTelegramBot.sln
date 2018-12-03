@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JuiceTelegramBot.Core", "Ju
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JuiceTelegramBotTests", "JuiceTelegramBotTests\JuiceTelegramBotTests.csproj", "{40ED2319-56E0-45CF-B40D-3242FCA8873B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuiceTelegramBotWebApp", "JuiceTelegramBotWebApp\JuiceTelegramBotWebApp.csproj", "{A5D14810-6ABB-4EAE-B02B-2CD0165923FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JuiceTelegramBotWebApp", "JuiceTelegramBotWebApp\JuiceTelegramBotWebApp.csproj", "{A5D14810-6ABB-4EAE-B02B-2CD0165923FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

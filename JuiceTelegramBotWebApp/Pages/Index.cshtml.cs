@@ -37,12 +37,25 @@ namespace JuiceTelegramBotWebApp.Pages
 
         public async Task<IActionResult> OnPostApprovedAsync()
         {
+            for (int i = 0; i < Juices.Count; i++)
+            {
+                if (Juices[i].IsChecked)
+                {
+                    juiceService.ApproveJuice(Juices[i].Name);
+                }
+            }
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(string name)
         {
-            juiceService.DeleteById(name); 
+            for (int i = 0; i < Juices.Count; i++)
+            {
+                if (Juices[i].IsChecked)
+                {
+                    juiceService.DeleteByName(Juices[i].Name);
+                }
+            }
             return RedirectToPage();
         }
     }

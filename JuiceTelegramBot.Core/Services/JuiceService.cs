@@ -57,9 +57,14 @@ namespace JuiceTelegramBot.Core.Services
             return false;
         }
 
-        public void DeleteById(string name)
+        public void DeleteByName(string name)
         {
             juiceRepository.DeleteJuice(name);
+        }
+
+        public void ApproveJuice(string name)
+        {
+            juiceRepository.ApproveJuice(name);
         }
     }
 }

@@ -29,6 +29,17 @@ namespace JuiceTelegramBot.Core.Repository
             _context.SaveChanges();
         }
 
+        public void ApproveJuice(string name)
+        {
+            var juiceDb = _context.Juices.FirstOrDefault(e => e.Name == name);
+            if (juiceDb == null)
+            {
+                throw new Exception("Juice not found");
+            }
+            juiceDb.Approved = true;
+            _context.SaveChanges();
+        }
+
         public void DeleteJuice(Juice juice)
         {
             this.DeleteJuice(juice.Name);
@@ -51,6 +62,23 @@ namespace JuiceTelegramBot.Core.Repository
             
             _context.Juices.Remove(juiceDb);
             _context.SaveChanges();
+        }
+
+        public Juice GetJuiceByName(string name)
+        {
+            var juiceDb = _context.Juices.FirstOrDefault(e => e.Name.ToLower() == name.ToLower());
+            if (juiceDb == null)
+            {
+                throw new Exception("Juice not found");
+            }
+            return new Juice
+            {
+                Approved = juiceDb.Approved,
+                IsCustom = juiceDb.IsCustom,
+                JuiceDateTime = juiceDb.JuiceDateTime,
+                Name = juiceDb.Name,
+                UserName = juiceDb.UserName
+            };
         }
 
         public IList<Juice> GetJuiceList()
