@@ -7,6 +7,7 @@ using JuiceTelegramBot.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -19,17 +20,20 @@ namespace JuiceTelegramBot.Controllers
         private readonly ITelegramBotClient telegramBot;
         private readonly IOrderService orderService;
         private readonly IJuiceService juiceService;
+        private readonly Microsoft.Extensions.Logging.ILogger<TelegramBotController> logger;
 
         private IConfiguration Configuration { get; }
 
-        public TelegramBotController(ITelegramBotClient botClient, IConfiguration configuration, IOrderService orderService, IJuiceService juiceService)
+        public TelegramBotController(ITelegramBotClient botClient, IConfiguration configuration, IOrderService orderService, IJuiceService juiceService, ILogger<TelegramBotController> logger)
         {
 
-            this.telegramBot = botClient;
-            Configuration = configuration;
-            this.orderService = orderService;
-            this.juiceService = juiceService;
+            this.telegramBot = botClient ?? throw new ArgumentNullException(nameof(botClient));
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
+            this.juiceService = juiceService ?? throw new ArgumentNullException(nameof(juiceService));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
+
         // POST api/values
         [HttpPost]
         public async Task Post([FromBody] Update update)
@@ -148,7 +152,7 @@ namespace JuiceTelegramBot.Controllers
             }
             catch (Exception ex)
             {
-
+                logger.LogError(ex, "Can't process message");
             }
 
         }
