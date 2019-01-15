@@ -9,9 +9,11 @@ namespace JuiceTelegramBotWebApp.ViewModels
     public class JuiceVM:Juice
     {
         public bool IsChecked { get; set; }
+
         public JuiceVM()
         {
         }
+
         public JuiceVM(Juice juice)
         {
             this.Approved = juice.Approved;
